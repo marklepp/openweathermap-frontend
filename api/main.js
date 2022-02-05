@@ -4,50 +4,80 @@ const https = require("https");
 const app = express();
 const port = process.env.PORT || 5000;
 const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
-const cities = require("./cities.js");
+const { cityIds } = require("./cities.js");
 
-const cache = {};
+function inMilliseconds(hours, minutes = 60, seconds = 60) {
+  return hours * minutes * seconds * 1000;
+}
 
-/*
-https
-  .get(
-    "https://api.openweathermap.org/data/2.5/forecast?id=" +
-      cities.jyvaksyla.id +
-      "&units=metric&appid=" +
-      OPENWEATHERMAP_API_KEY +
-      "&lang=fi",
-    (res) => {
-      console.log("statusCode:", res.statusCode);
-      console.log("headers:", res.headers);
+const currentWeatherCache = {};
 
-      res.on("data", (d) => {
-        process.stdout.write(d);
-      });
-    }
-  )
-  .on("error", (e) => {
-    console.error(e);
-  });
-*/
-function getCurrentWeather(city, callback) {
+function getCurrentWeather(cityId, callback) {
+  let time = Date.now();
+  if (
+    cityId in currentWeatherCache &&
+    currentWeatherCache[cityId].time - time <= inMilliseconds(0, 10)
+  ) {
+    setTimeout(() => callback({ ...currentWeatherCache[cityId].data }), 0);
+    return;
+  }
   https
     .get(
       "https://api.openweathermap.org/data/2.5/weather?id=" +
-        city.id +
+        cityId +
         "&units=metric&appid=" +
         OPENWEATHERMAP_API_KEY +
         "&lang=fi",
       (res) => {
-        console.log("statusCode:", res.statusCode);
-        console.log("headers:", res.headers);
-
         let body = "";
         res.on("data", (chunk) => {
           body += chunk;
         });
         res.on("end", () => {
           const weatherjson = JSON.parse(body);
-          callback(weatherjson);
+          currentWeatherCache[cityId] = {
+            time: Date.now(),
+            data: weatherjson,
+          };
+          callback({ ...weatherjson });
+        });
+      }
+    )
+    .on("error", (e) => {
+      console.error(e);
+    });
+}
+
+const forecastCache = {};
+
+function getWeatherForecast(cityId, callback) {
+  let time = Date.now();
+  if (
+    cityId in forecastCache &&
+    forecastCache[cityId].time - time <= inMilliseconds(3)
+  ) {
+    setTimeout(() => callback({ ...forecastCache[cityId].data }), 0);
+    return;
+  }
+  https
+    .get(
+      "https://api.openweathermap.org/data/2.5/forecast?id=" +
+        cityId +
+        "&units=metric&appid=" +
+        OPENWEATHERMAP_API_KEY +
+        "&lang=fi",
+      (res) => {
+        let body = "";
+        res.on("data", (chunk) => {
+          body += chunk;
+        });
+        res.on("end", () => {
+          const weatherjson = JSON.parse(body);
+          forecastCache[cityId] = {
+            time: Date.now(),
+            data: weatherjson,
+          };
+          callback({ ...weatherjson });
         });
       }
     )
@@ -58,16 +88,37 @@ function getCurrentWeather(city, callback) {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-/*
-app.get("/api/hello", (req, res) => {
-  res.send({ express: "Hello From Express" });
+
+app.post("/api/current", (req, res) => {
+  const { cityName } = req.body;
+  if (cityName in cityIds) {
+    const cityId = cityIds[cityName];
+    getCurrentWeather(cityId, (resJson) => {
+      res.send(resJson);
+    });
+  } else {
+    res.status(404).send({
+      message: 'City "' + cityName + '" not found',
+    });
+  }
 });
 
-app.post("/api/world", (req, res) => {
-  console.log(req.body);
-  res.send(
-    `I received your POST request. This is what you sent me: ${req.body.post}`
-  );
+app.post("/api/forecast", (req, res) => {
+  const { cityName } = req.body;
+  if (cityName in cityIds) {
+    const cityId = cityIds[cityName];
+    getWeatherForecast(cityId, (resJson) => {
+      const time = Date.now();
+      resJson.list = resJson.list.filter(
+        (item) => item.dt * 1000 - time <= inMilliseconds(26)
+      );
+      res.send(resJson);
+    });
+  } else {
+    res.status(404).send({
+      message: 'City "' + cityName + '" not found',
+    });
+  }
 });
-*/
-//app.listen(port, () => console.log(`Listening on port ${port}`));
+
+app.listen(port, () => console.log(`Listening on port ${port}`));

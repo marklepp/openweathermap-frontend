@@ -1,10 +1,7 @@
-const city = (name, id) => {
-  return {
-    name: name,
-    id: id,
-  };
-};
-exports.jyvaksyla = city("Jyväskylä", "655195");
-exports.tampere = city("Tampere", "634063");
-exports.kuopio = city("Kuopio", "650225");
-exports.espoo = city("Espoo", "660129");
+const cityIds = {};
+cityIds["Jyväskylä"] = "655195";
+cityIds["Tampere"] = "634063";
+cityIds["Kuopio"] = "650225";
+cityIds["Espoo"] = "660129";
+
+exports.cityIds = cityIds;
