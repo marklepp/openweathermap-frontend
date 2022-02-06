@@ -1,5 +1,6 @@
 const express = require("express");
 const https = require("https");
+const { stdout } = require("process");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -21,6 +22,7 @@ function getCurrentWeather(cityId, callback) {
     setTimeout(() => callback({ ...currentWeatherCache[cityId].data }), 0);
     return;
   }
+  console.log("Fetching current weather for", cityId);
   https
     .get(
       "https://api.openweathermap.org/data/2.5/weather?id=" +
@@ -59,6 +61,7 @@ function getWeatherForecast(cityId, callback) {
     setTimeout(() => callback({ ...forecastCache[cityId].data }), 0);
     return;
   }
+  console.log("Fetching forecast for", cityId);
   https
     .get(
       "https://api.openweathermap.org/data/2.5/forecast?id=" +
