@@ -9,11 +9,14 @@
   --border-radius: 0.25rem;
   --dark-font: #262626;
   --light-font: #70757A;
+  --neutral-background: #F8F9FA;
+  --content-background: #FFFFFF;
+  --dim-background: #E5F6FD;
 }
 
 body {
   margin: 0;
-  font-family: 'Arial Regular', 'Helvetica Neue',
+  font-family: 'Arial Regular', Arial, 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

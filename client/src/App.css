@@ -1,11 +1,11 @@
 .App {
   text-align: center;
-  background-color: #f8f9fa;
+  background-color: var(--neutral-background);
   height:100vh;
   width: 100%;
 }
 .App-header {
-  background-color: #ffffff;
+  background-color: var(--content-background);
   padding:1rem;
 }
 .App-header h1 {

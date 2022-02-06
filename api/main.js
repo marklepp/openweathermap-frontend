@@ -1,35 +1,30 @@
 const express = require("express");
 const https = require("https");
-const { stdout } = require("process");
 
 const app = express();
 const port = process.env.PORT || 5000;
 const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
 const { cityIds } = require("./cities.js");
 
-function inMilliseconds(hours, minutes = 60, seconds = 60) {
-  return hours * minutes * seconds * 1000;
-}
-
 const currentWeatherCache = {};
-
 function getCurrentWeather(cityId, callback) {
   let time = Date.now();
   if (
     cityId in currentWeatherCache &&
-    currentWeatherCache[cityId].time - time <= inMilliseconds(0, 10)
+    time - currentWeatherCache[cityId].time <= 10 * 60 * 1000
   ) {
+    console.log(new Date(), "Current weather from cache for", cityId);
     setTimeout(() => callback({ ...currentWeatherCache[cityId].data }), 0);
     return;
   }
-  console.log("Fetching current weather for", cityId);
+  console.log(new Date(), "Fetching current weather for", cityId);
   https
     .get(
       "https://api.openweathermap.org/data/2.5/weather?id=" +
         cityId +
         "&units=metric&appid=" +
-        OPENWEATHERMAP_API_KEY +
-        "&lang=fi",
+        OPENWEATHERMAP_API_KEY,
+      //"&lang=fi"
       (res) => {
         let body = "";
         res.on("data", (chunk) => {
@@ -37,6 +32,12 @@ function getCurrentWeather(cityId, callback) {
         });
         res.on("end", () => {
           const weatherjson = JSON.parse(body);
+          weatherjson.precipitation = { "3h": 0 };
+          //if ("rain" in weatherjson) {
+          //  weatherjson.precipitation["3h"] = weatherjson.rain["3h"];
+          //} else if ("snow" in weatherjson) {
+          //  weatherjson.precipitation["3h"] = weatherjson.snow["3h"];
+          //}
           currentWeatherCache[cityId] = {
             time: Date.now(),
             data: weatherjson,
@@ -56,19 +57,20 @@ function getWeatherForecast(cityId, callback) {
   let time = Date.now();
   if (
     cityId in forecastCache &&
-    forecastCache[cityId].time - time <= inMilliseconds(3)
+    time - forecastCache[cityId].time <= 3 * 60 * 60 * 1000
   ) {
+    console.log(new Date(), "Forecast from cache for", cityId);
     setTimeout(() => callback({ ...forecastCache[cityId].data }), 0);
     return;
   }
-  console.log("Fetching forecast for", cityId);
+  console.log(new Date(), "Fetching forecast for", cityId);
   https
     .get(
       "https://api.openweathermap.org/data/2.5/forecast?id=" +
         cityId +
-        "&units=metric&appid=" +
-        OPENWEATHERMAP_API_KEY +
-        "&lang=fi",
+        "&units=metric&cnt=6&appid=" +
+        OPENWEATHERMAP_API_KEY,
+      //"&lang=fi"
       (res) => {
         let body = "";
         res.on("data", (chunk) => {
@@ -76,6 +78,14 @@ function getWeatherForecast(cityId, callback) {
         });
         res.on("end", () => {
           const weatherjson = JSON.parse(body);
+          weatherjson.list.forEach((weather) => {
+            weather.precipitation = { "3h": 0 };
+            if ("rain" in weather) {
+              weather.precipitation["3h"] = weather.rain["3h"];
+            } else if ("snow" in weather) {
+              weather.precipitation["3h"] = weather.snow["3h"];
+            }
+          });
           forecastCache[cityId] = {
             time: Date.now(),
             data: weatherjson,
@@ -111,10 +121,6 @@ app.post("/api/forecast", (req, res) => {
   if (cityName in cityIds) {
     const cityId = cityIds[cityName];
     getWeatherForecast(cityId, (resJson) => {
-      const time = Date.now();
-      resJson.list = resJson.list.filter(
-        (item) => item.dt * 1000 - time <= inMilliseconds(26)
-      );
       res.send(resJson);
     });
   } else {

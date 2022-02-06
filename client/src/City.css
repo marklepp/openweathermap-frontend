@@ -1,10 +1,11 @@
 .City {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+  overflow: hidden;
 }
 
 .City-current{
-  background-color: #ffffff;
+  background-color: var(--content-background);
   border: var(--borders);
   border-radius: var(--border-radius);
   color: var(--dark-font);
@@ -12,13 +13,18 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding:0.5rem;
+  align-items: center;
+  padding-left:1rem;
+  padding-right:1rem;
+  padding-bottom:1rem;
 }
 .City-current > * {
   width: 50%;
 }
 
 .City-header {
+  align-self: flex-start;
+  padding-top:1rem;
   text-align: left;
 }
 .City-name {
@@ -39,7 +45,8 @@
   text-align: right;
 }
 .City-largeicon {
-  display:block;
+  display: block;
+  height: 90px;
 }
 .City-maintemperature {
   font-size: 26pt;
@@ -68,4 +75,22 @@
   font-size: 13pt;
   color: var(--light-font);
   white-space: nowrap;
+}
+
+
+.City-forecast {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.City-smalltemperature {
+  background-color: var(--content-background);
+  border: var(--borders);
+  border-radius: var(--border-radius);
+}
+
+.City-small-details {
+  background-color: var(--dim-background);
+  border-top: var(--borders);
 }
