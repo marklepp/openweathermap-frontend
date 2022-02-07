@@ -1,15 +1,18 @@
 .Cities {
   padding:1em;
   border-top: var(--borders);
+  margin:auto;
 }
 
 .Cities-selector {
-  color: var(--dark-font);
+  margin:auto;
+  color: var(--main-font);
   border: var(--borders);
   border-radius: var(--border-radius);
   background-color: var(--content-background);
-  font-size: 13pt;
+  font-size: 13px;
   padding: 1em;
   width: 100%;
+  max-width: 500px;
   margin-bottom: 0.5rem;
 }

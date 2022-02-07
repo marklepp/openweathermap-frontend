@@ -48,7 +48,7 @@ function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function City({ cityName }) {
+function City({ cityName, show }) {
   const [current, setCurrent] = useState({
     weather: [{ description: "Loading...", icon: "01d" }],
     main: { temp: 0, humidity: 0 },
@@ -118,7 +118,7 @@ function City({ cityName }) {
     [cityName]
   );
   return (
-    <div className="City">
+    <div className={show ? "City" : "hide"}>
       <div className="City-current">
         <div className="City-header">
           <p className="City-name">{cityName}</p>
@@ -144,21 +144,25 @@ function City({ cityName }) {
           </p>
         </div>
       </div>
-      <div className="City-forecast">
-        {forecast.list.map((weatherAtTime, i) => {
+      <div className="City-forecasts">
+        {forecast.list.slice(1).map((weatherAtTime, i) => {
           return (
-            <div key={i} className="City-smalltemperature">
-              <p className="City-time-of-day">{toTimeOfDay(new Date(weatherAtTime.dt * 1000))}</p>
-              <img
-                className="City-smallicon"
-                alt="Weather"
-                src={"http://openweathermap.org/img/wn/" + weatherAtTime.weather[0].icon + ".png"}
-              />
-              <p className="City-temperature">{weatherAtTime.main.temp.toFixed(0)} °C</p>
+            <div key={i} className="City-forecast">
+              <div className="City-small-temperature">
+                <p className="City-time-of-day">{toTimeOfDay(new Date(weatherAtTime.dt * 1000))}</p>
+                <img
+                  className="City-smallicon"
+                  alt="Weather"
+                  src={"http://openweathermap.org/img/wn/" + weatherAtTime.weather[0].icon + ".png"}
+                />
+                <p className="City-temperature">{weatherAtTime.main.temp.toFixed(0)} °C</p>
+              </div>
               <div className="City-small-details">
                 <p className="City-small-detail">{weatherAtTime.wind.speed.toFixed(1)} m/s</p>
                 <p className="City-small-detail">{weatherAtTime.main.humidity.toFixed(0)} %</p>
-                <p className="City-small-detail">{weatherAtTime.precipitation["3h"]} mm</p>
+                <p className="City-small-detail">
+                  {weatherAtTime.precipitation["3h"].toFixed(0)} mm
+                </p>
               </div>
             </div>
           );

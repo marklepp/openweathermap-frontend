@@ -16,11 +16,7 @@ function Cities() {
   }
   return (
     <div className="Cities">
-      <select
-        className="Cities-selector"
-        defaultValue="all"
-        onChange={handleCitySelect}
-      >
+      <select className="Cities-selector" defaultValue="all" onChange={handleCitySelect}>
         <option value="all">Kaikki kaupungit</option>
         {allCities.map((cityName) => (
           <option key={cityName} value={cityName}>
@@ -28,8 +24,8 @@ function Cities() {
           </option>
         ))}
       </select>
-      {selectedCities.map((cityName) => (
-        <City key={cityName} cityName={cityName} />
+      {allCities.map((cityName) => (
+        <City key={cityName} cityName={cityName} show={selectedCities.includes(cityName)} />
       ))}
     </div>
   );

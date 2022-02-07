@@ -1,14 +1,15 @@
 .City {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-  overflow: hidden;
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+  max-width: 500px;
+  margin:auto;
 }
 
 .City-current{
   background-color: var(--content-background);
   border: var(--borders);
   border-radius: var(--border-radius);
-  color: var(--dark-font);
+  color: var(--main-font);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -17,23 +18,35 @@
   padding-left:1rem;
   padding-right:1rem;
   padding-bottom:1rem;
+  overflow: hidden;
 }
 .City-current > * {
   width: 50%;
 }
-
-.City-header {
-  align-self: flex-start;
-  padding-top:1rem;
+.City-current > *:nth-child(-n+2) {
+  align-self:flex-start;
+}
+.City-current > *:nth-child(n+3) {
+  align-self:flex-end;
+}
+.City-current > *:nth-child(odd) {
   text-align: left;
 }
+.City-current > *:nth-child(even) {
+  text-align: right;
+}
+
+.City-header {
+  padding-top: 1rem;
+  z-index: 1;
+}
 .City-name {
-  font-size: 19pt;
-  color: var(--dark-font);
+  font-size: 19px;
+  color: var(--main-font);
 }
 .City-description {
-  font-size: 13pt;
-  color: var(--light-font);
+  font-size: 13px;
+  color: var(--detail-font);
   white-space: nowrap;
 }
 
@@ -42,55 +55,74 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  text-align: right;
 }
 .City-largeicon {
   display: block;
-  height: 90px;
+  height: 80px;
 }
 .City-maintemperature {
-  font-size: 26pt;
-  color: var(--dark-font);
+  font-size: 26px;
+  color: var(--main-font);
   white-space: nowrap;
 }
 
-.City-date-time {
-  text-align: left;
-  align-self: flex-end;  
-}
+
+
 .City-date {
-  font-size:15pt;
-  color:var(--dark-font);
+  font-size:15px;
+  color:var(--main-font);
   white-space: nowrap;
 }
 .City-time-of-day {
-  font-size:13pt;
-  color:var(--light-font);  
+  font-size:13px;
+  color:var(--detail-font);  
 }
 
-.City-details {
-  text-align: right;
+.City-details{
+  margin-top: 1rem;
 }
 .City-detail {
-  font-size: 13pt;
-  color: var(--light-font);
+  font-size: 13px;
+  color: var(--detail-font);
   white-space: nowrap;
 }
 
 
-.City-forecast {
+.City-forecasts {
+  padding-top:0.5rem;
   display:flex;
   flex-direction: row;
   justify-content: space-between;
+  overflow: auto;
+  gap: 0.3em;
 }
 
-.City-smalltemperature {
+.City-forecast {
   background-color: var(--content-background);
   border: var(--borders);
   border-radius: var(--border-radius);
+}
+.City-small-temperature {
+  padding-top: 0.75rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+.City-temperature{
+  font-size: 15px;
+  color: var(--main-font);
 }
 
 .City-small-details {
   background-color: var(--dim-background);
   border-top: var(--borders);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.City-small-detail {
+  font-size: 10px;
+  color: var(--detail-font);
+}
+.hide {
+  display:none;
 }

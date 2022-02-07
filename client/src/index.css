@@ -6,9 +6,9 @@
 
 :root {
   --borders: solid #E6E6E6 1px;
-  --border-radius: 0.25rem;
-  --dark-font: #262626;
-  --light-font: #70757A;
+  --border-radius: 0.3rem;
+  --main-font: #262626;
+  --detail-font: #70757A;
   --neutral-background: #F8F9FA;
   --content-background: #FFFFFF;
   --dim-background: #E5F6FD;
