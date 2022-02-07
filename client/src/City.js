@@ -122,34 +122,23 @@ function City({ cityName }) {
       <div className="City-current">
         <div className="City-header">
           <p className="City-name">{cityName}</p>
-          <p className="City-description">
-            {capitalizeFirst(current.weather[0].description)}
-          </p>
+          <p className="City-description">{capitalizeFirst(current.weather[0].description)}</p>
         </div>
         <div className="City-largetemperature">
           <img
             className="City-largeicon"
-            src={
-              "http://openweathermap.org/img/wn/" +
-              current.weather[0].icon +
-              "@2x.png"
-            }
+            alt="Weather"
+            src={"http://openweathermap.org/img/wn/" + current.weather[0].icon + "@2x.png"}
           />
-          <p className="City-maintemperature">
-            {current.main.temp.toFixed(0)} °C
-          </p>
+          <p className="City-maintemperature">{current.main.temp.toFixed(0)} °C</p>
         </div>
         <div className="City-date-time">
           <p className="City-date">{toMonthAndDay(new Date())}</p>
           <p className="City-time-of-day">{toTimeOfDay(new Date())}</p>
         </div>
         <div className="City-details">
-          <p className="City-detail">
-            Wind: {current.wind.speed.toFixed(1)} m/s
-          </p>
-          <p className="City-detail">
-            Humidity: {current.main.humidity.toFixed(0)} %
-          </p>
+          <p className="City-detail">Wind: {current.wind.speed.toFixed(1)} m/s</p>
+          <p className="City-detail">Humidity: {current.main.humidity.toFixed(0)} %</p>
           <p className="City-detail">
             Precipitation (3 h): {current.precipitation["3h"].toFixed(0)} mm
           </p>
@@ -159,30 +148,17 @@ function City({ cityName }) {
         {forecast.list.map((weatherAtTime, i) => {
           return (
             <div key={i} className="City-smalltemperature">
-              <p className="City-time-of-day">
-                {toTimeOfDay(new Date(weatherAtTime.dt * 1000))}
-              </p>
+              <p className="City-time-of-day">{toTimeOfDay(new Date(weatherAtTime.dt * 1000))}</p>
               <img
                 className="City-smallicon"
-                src={
-                  "http://openweathermap.org/img/wn/" +
-                  weatherAtTime.weather[0].icon +
-                  ".png"
-                }
+                alt="Weather"
+                src={"http://openweathermap.org/img/wn/" + weatherAtTime.weather[0].icon + ".png"}
               />
-              <p className="City-temperature">
-                {weatherAtTime.main.temp.toFixed(0)} °C
-              </p>
+              <p className="City-temperature">{weatherAtTime.main.temp.toFixed(0)} °C</p>
               <div className="City-small-details">
-                <p className="City-small-detail">
-                  {weatherAtTime.wind.speed.toFixed(1)} m/s
-                </p>
-                <p className="City-small-detail">
-                  {weatherAtTime.main.humidity.toFixed(0)} %
-                </p>
-                <p className="City-small-detail">
-                  {weatherAtTime.precipitation["3h"]} mm
-                </p>
+                <p className="City-small-detail">{weatherAtTime.wind.speed.toFixed(1)} m/s</p>
+                <p className="City-small-detail">{weatherAtTime.main.humidity.toFixed(0)} %</p>
+                <p className="City-small-detail">{weatherAtTime.precipitation["3h"]} mm</p>
               </div>
             </div>
           );

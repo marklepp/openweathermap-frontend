@@ -1,5 +1,6 @@
 const express = require("express");
 const https = require("https");
+const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -9,10 +10,7 @@ const { cityIds } = require("./cities.js");
 const currentWeatherCache = {};
 function getCurrentWeather(cityId, callback) {
   let time = Date.now();
-  if (
-    cityId in currentWeatherCache &&
-    time - currentWeatherCache[cityId].time <= 10 * 60 * 1000
-  ) {
+  if (cityId in currentWeatherCache && time - currentWeatherCache[cityId].time <= 10 * 60 * 1000) {
     console.log(new Date(), "Current weather from cache for", cityId);
     setTimeout(() => callback({ ...currentWeatherCache[cityId].data }), 0);
     return;
@@ -55,10 +53,7 @@ const forecastCache = {};
 
 function getWeatherForecast(cityId, callback) {
   let time = Date.now();
-  if (
-    cityId in forecastCache &&
-    time - forecastCache[cityId].time <= 3 * 60 * 60 * 1000
-  ) {
+  if (cityId in forecastCache && time - forecastCache[cityId].time <= 3 * 60 * 60 * 1000) {
     console.log(new Date(), "Forecast from cache for", cityId);
     setTimeout(() => callback({ ...forecastCache[cityId].data }), 0);
     return;
@@ -129,5 +124,11 @@ app.post("/api/forecast", (req, res) => {
     });
   }
 });
+
+//app.use(express.static(path.join(__dirname, "..", "client", "build")));
+//
+//app.get("/", function (req, res) {
+//  res.sendFile(path.join(__dirname, "..", "client", "build", "index.html"));
+//});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
