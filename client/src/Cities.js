@@ -24,9 +24,11 @@ function Cities() {
           </option>
         ))}
       </select>
-      {allCities.map((cityName) => (
-        <City key={cityName} cityName={cityName} show={selectedCities.includes(cityName)} />
-      ))}
+      <div className="Cities-list">
+        {allCities.map((cityName) => (
+          <City key={cityName} cityName={cityName} show={selectedCities.includes(cityName)} />
+        ))}
+      </div>
     </div>
   );
 }

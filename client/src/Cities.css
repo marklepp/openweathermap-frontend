@@ -16,3 +16,18 @@
   max-width: 500px;
   margin-bottom: 0.5rem;
 }
+
+
+@media screen and (min-width:800px) {
+  .Cities-list {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 1rem;
+    max-width: 1200px;
+    margin:auto;
+  }
+  .Cities-list > * {
+    flex-basis: 100%;
+  }
+}

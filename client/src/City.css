@@ -41,13 +41,24 @@
   z-index: 1;
 }
 .City-name {
-  font-size: 19px;
+  font-size: 16px;
   color: var(--main-font);
 }
 .City-description {
   font-size: 13px;
   color: var(--detail-font);
-  white-space: nowrap;
+  white-space: normal;
+}
+@media screen and (min-width:270px) {
+  .City-name {
+    font-size: 19px;
+    color: var(--main-font);
+  }
+}
+@media screen and (min-width:350px) {
+  .City-description {
+    white-space: nowrap;
+  }
 }
 
 .City-largetemperature {
@@ -56,14 +67,48 @@
   align-items: center;
   justify-content: flex-end;
 }
-.City-largeicon {
+.City-large-icon {
   display: block;
-  height: 80px;
+  box-sizing: content-box;
+  height: 50px;
+  width: 50px;
+  padding-top:10px;
+  padding-bottom:10px;
 }
 .City-maintemperature {
-  font-size: 26px;
+  font-size: 20px;
   color: var(--main-font);
   white-space: nowrap;
+}
+@media screen and (min-width:270px) {
+  .City-largetemperature {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .City-large-icon {
+    display: block;
+    box-sizing: content-box;
+    height: 60px;
+    width: 60px;
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+  .City-maintemperature {
+    font-size: 26px;
+    color: var(--main-font);
+    white-space: nowrap;
+  }
+}
+@media screen and (min-width:350px) {
+  .City-large-icon {
+    display: block;
+    box-sizing: border-box;
+    height: 80px;
+    width: 80px;
+    padding: 0;
+  }
 }
 
 
@@ -86,7 +131,31 @@
   color: var(--detail-font);
   white-space: nowrap;
 }
-
+.City-wind::before{
+  content: "";
+}
+.City-humidity::before{
+  content: "";
+}
+.City-precipitation::before{
+  content: "";
+}
+@media screen and (min-width:270px) {
+  .City-wind::before{
+    content: "Wind: ";
+  }
+  .City-humidity::before{
+    content: "Humidity: ";
+  }
+  .City-precipitation::before{
+    content: "Precip.(3h): ";
+  }
+}
+@media screen and (min-width:350px) {
+  .City-precipitation::before{
+    content: "Precipitiation (3h): ";
+  }
+}
 
 .City-forecasts {
   padding-top:0.5rem;
@@ -107,6 +176,11 @@
   padding-bottom: 0.5rem;
   padding-left: 0.25rem;
   padding-right: 0.25rem;
+}
+.City-small-icon {
+  display:block;
+  height:50px;
+  width:50px;
 }
 .City-temperature{
   font-size: 15px;

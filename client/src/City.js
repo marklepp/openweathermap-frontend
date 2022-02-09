@@ -37,7 +37,7 @@ function padInt(length, int) {
 function toMonthAndDay(date) {
   let output = "";
   output += months[date.getMonth()] + " ";
-  let dayOfMonth = date.getDate() + 1;
+  let dayOfMonth = date.getDate();
   output += dayOfMonth + dayOrdinal(dayOfMonth);
   return output;
 }
@@ -50,7 +50,7 @@ function capitalizeFirst(str) {
 
 function City({ cityName, show }) {
   const [current, setCurrent] = useState({
-    weather: [{ description: "Loading...", icon: "01d" }],
+    weather: [{ description: "Loading...", main: "Weather", icon: null }],
     main: { temp: 0, humidity: 0 },
     wind: { speed: 0 },
     precipitation: { "3h": 0 },
@@ -59,7 +59,7 @@ function City({ cityName, show }) {
   const [forecast, setForecast] = useState({
     list: [1, 2, 3, 4, 5, 6].map((i) => {
       return {
-        weather: [{ description: "Loading...", icon: "01d" }],
+        weather: [{ description: "Loading...", main: "Weather", icon: null }],
         main: { temp: 0, humidity: 0 },
         wind: { speed: 0 },
         dt: 0,
@@ -117,6 +117,8 @@ function City({ cityName, show }) {
     },
     [cityName]
   );
+  const nextForecastInUnder1h = forecast.list[0].dt - Date.now() / 1000 < 1 * 60 * 60;
+  const [start, end] = nextForecastInUnder1h ? [1, 6] : [0, 5];
   return (
     <div className={show ? "City" : "hide"}>
       <div className="City-current">
@@ -125,11 +127,15 @@ function City({ cityName, show }) {
           <p className="City-description">{capitalizeFirst(current.weather[0].description)}</p>
         </div>
         <div className="City-largetemperature">
-          <img
-            className="City-largeicon"
-            alt="Weather"
-            src={"http://openweathermap.org/img/wn/" + current.weather[0].icon + "@2x.png"}
-          />
+          {current.weather[0].icon === null ? (
+            <div className="City-large-icon"></div>
+          ) : (
+            <img
+              className="City-large-icon"
+              alt={current.weather[0].main}
+              src={"http://openweathermap.org/img/wn/" + current.weather[0].icon + "@2x.png"}
+            />
+          )}
           <p className="City-maintemperature">{current.main.temp.toFixed(0)} °C</p>
         </div>
         <div className="City-date-time">
@@ -137,24 +143,30 @@ function City({ cityName, show }) {
           <p className="City-time-of-day">{toTimeOfDay(new Date())}</p>
         </div>
         <div className="City-details">
-          <p className="City-detail">Wind: {current.wind.speed.toFixed(1)} m/s</p>
-          <p className="City-detail">Humidity: {current.main.humidity.toFixed(0)} %</p>
-          <p className="City-detail">
-            Precipitation (3 h): {current.precipitation["3h"].toFixed(0)} mm
+          <p className="City-detail City-wind">{current.wind.speed.toFixed(1)} m/s</p>
+          <p className="City-detail City-humidity">{current.main.humidity.toFixed(0)} %</p>
+          <p className="City-detail City-precipitation">
+            {current.precipitation["3h"].toFixed(0)} mm
           </p>
         </div>
       </div>
       <div className="City-forecasts">
-        {forecast.list.slice(1).map((weatherAtTime, i) => {
+        {forecast.list.slice(start, end).map((weatherAtTime, i) => {
           return (
             <div key={i} className="City-forecast">
               <div className="City-small-temperature">
                 <p className="City-time-of-day">{toTimeOfDay(new Date(weatherAtTime.dt * 1000))}</p>
-                <img
-                  className="City-smallicon"
-                  alt="Weather"
-                  src={"http://openweathermap.org/img/wn/" + weatherAtTime.weather[0].icon + ".png"}
-                />
+                {weatherAtTime.weather[0].icon === null ? (
+                  <div className="City-small-icon"></div>
+                ) : (
+                  <img
+                    className="City-small-icon"
+                    alt={current.weather[0].main}
+                    src={
+                      "http://openweathermap.org/img/wn/" + weatherAtTime.weather[0].icon + ".png"
+                    }
+                  />
+                )}
                 <p className="City-temperature">{weatherAtTime.main.temp.toFixed(0)} °C</p>
               </div>
               <div className="City-small-details">
