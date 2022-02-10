@@ -109,6 +109,9 @@ function City({ cityName, show }) {
           if (data && data.cod === 200) {
             setCurrent(data);
           }
+        })
+        .catch((reason) => {
+          console.warn(reason);
         });
       const timeout = setTimeout(updateCurrent, 1000 * 60 * 10);
       return () => {
@@ -139,6 +142,9 @@ function City({ cityName, show }) {
           if (data && data.cod === 200) {
             setForecast(data);
           }
+        })
+        .catch((reason) => {
+          console.warn(reason);
         });
       const nextTarget = new Date(Date.now() + 1000 * 60 * 60);
       nextTarget.setMinutes(0, 0, 0);

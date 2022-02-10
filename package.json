@@ -1,0 +1,18 @@
+{
+  "name": "openweathermap-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "private":true,
+  "scripts": {
+    "install": "cd api && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build",
+    "start": "npm run build && npm run startserver",
+    "devserver": "start npm run client && start npm run server",
+    "client": "cd client && npm run start",
+    "server": "cd api && npm run start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
