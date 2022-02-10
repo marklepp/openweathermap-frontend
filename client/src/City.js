@@ -48,6 +48,25 @@ function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function DateAndTime() {
+  const [time, setTime] = useState(new Date());
+  useEffect(() => {
+    const nextTarget = new Date(time.getTime() + 1000 * 60);
+    nextTarget.setSeconds(1, 0);
+
+    const timeout = setTimeout(() => setTime(new Date()), nextTarget.getTime() - Date.now());
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [time]);
+  return (
+    <div className="City-date-time">
+      <p className="City-date">{toMonthAndDay(time)}</p>
+      <p className="City-time-of-day">{toTimeOfDay(time)}</p>
+    </div>
+  );
+}
+
 function City({ cityName, show }) {
   const [current, setCurrent] = useState({
     weather: [{ description: "Loading...", main: "Weather", icon: null }],
@@ -67,13 +86,12 @@ function City({ cityName, show }) {
       };
     }),
   });
-  console.log(current);
-  console.log(forecast);
+
   useEffect(
     function updateCurrent() {
       fetch("/api/current", {
         method: "POST",
-        mode: "cors",
+        mode: "same-origin",
         cache: "no-cache",
         headers: {
           "Content-Type": "application/json",
@@ -88,8 +106,14 @@ function City({ cityName, show }) {
           return res.json();
         })
         .then((data) => {
-          if (data) setCurrent(data);
+          if (data && data.cod === 200) {
+            setCurrent(data);
+          }
         });
+      const timeout = setTimeout(updateCurrent, 1000 * 60 * 10);
+      return () => {
+        clearTimeout(timeout);
+      };
     },
     [cityName]
   );
@@ -97,7 +121,7 @@ function City({ cityName, show }) {
     function updateForecast() {
       fetch("/api/forecast", {
         method: "POST",
-        mode: "cors",
+        mode: "same-origin",
         cache: "no-cache",
         headers: {
           "Content-Type": "application/json",
@@ -112,8 +136,16 @@ function City({ cityName, show }) {
           return res.json();
         })
         .then((data) => {
-          if (data) setForecast(data);
+          if (data && data.cod === 200) {
+            setForecast(data);
+          }
         });
+      const nextTarget = new Date(Date.now() + 1000 * 60 * 60);
+      nextTarget.setMinutes(0, 0, 0);
+      const timeout = setTimeout(updateForecast, nextTarget.getTime() - Date.now());
+      return () => {
+        clearTimeout(timeout);
+      };
     },
     [cityName]
   );
@@ -126,7 +158,7 @@ function City({ cityName, show }) {
           <p className="City-name">{cityName}</p>
           <p className="City-description">{capitalizeFirst(current.weather[0].description)}</p>
         </div>
-        <div className="City-largetemperature">
+        <div className="City-large-temperature">
           {current.weather[0].icon === null ? (
             <div className="City-large-icon"></div>
           ) : (
@@ -136,17 +168,14 @@ function City({ cityName, show }) {
               src={"http://openweathermap.org/img/wn/" + current.weather[0].icon + "@2x.png"}
             />
           )}
-          <p className="City-maintemperature">{current.main.temp.toFixed(0)} °C</p>
+          <p className="City-main-temperature">{current.main.temp.toFixed(0)} °C</p>
         </div>
-        <div className="City-date-time">
-          <p className="City-date">{toMonthAndDay(new Date())}</p>
-          <p className="City-time-of-day">{toTimeOfDay(new Date())}</p>
-        </div>
+        <DateAndTime />
         <div className="City-details">
           <p className="City-detail City-wind">{current.wind.speed.toFixed(1)} m/s</p>
           <p className="City-detail City-humidity">{current.main.humidity.toFixed(0)} %</p>
           <p className="City-detail City-precipitation">
-            {current.precipitation["3h"].toFixed(0)} mm
+            {forecast.list[0].precipitation["3h"].toFixed(0)} mm
           </p>
         </div>
       </div>

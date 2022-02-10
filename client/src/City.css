@@ -36,6 +36,9 @@
   text-align: right;
 }
 
+
+
+
 .City-header {
   padding-top: 1rem;
   z-index: 1;
@@ -61,7 +64,10 @@
   }
 }
 
-.City-largetemperature {
+
+
+
+.City-large-temperature {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -75,13 +81,13 @@
   padding-top:10px;
   padding-bottom:10px;
 }
-.City-maintemperature {
+.City-main-temperature {
   font-size: 20px;
   color: var(--main-font);
   white-space: nowrap;
 }
 @media screen and (min-width:270px) {
-  .City-largetemperature {
+  .City-large-temperature {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -95,7 +101,7 @@
     padding-top:10px;
     padding-bottom:10px;
   }
-  .City-maintemperature {
+  .City-main-temperature {
     font-size: 26px;
     color: var(--main-font);
     white-space: nowrap;
@@ -113,6 +119,7 @@
 
 
 
+
 .City-date {
   font-size:15px;
   color:var(--main-font);
@@ -122,6 +129,9 @@
   font-size:13px;
   color:var(--detail-font);  
 }
+
+
+
 
 .City-details{
   margin-top: 1rem;
@@ -157,6 +167,9 @@
   }
 }
 
+
+
+
 .City-forecasts {
   padding-top:0.5rem;
   display:flex;
@@ -171,6 +184,9 @@
   border: var(--borders);
   border-radius: var(--border-radius);
 }
+
+
+
 .City-small-temperature {
   padding-top: 0.75rem;
   padding-bottom: 0.5rem;
@@ -187,6 +203,9 @@
   color: var(--main-font);
 }
 
+
+
+
 .City-small-details {
   background-color: var(--dim-background);
   border-top: var(--borders);
@@ -197,6 +216,9 @@
   font-size: 10px;
   color: var(--detail-font);
 }
+
+
+
 .hide {
   display:none;
 }
