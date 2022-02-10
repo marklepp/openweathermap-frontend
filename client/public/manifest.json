@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Säätutka",
+  "name": "OpenWeather-sääohjelma",
   "icons": [
     {
       "src": "favicon.ico",
